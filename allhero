@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>英雄抽取</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+
+   .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+   .author {
+      color: #666;
+      font-style: italic;
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+
+   .refresh-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+
+   .refresh-btn:hover {
+      background-color: #45a049;
+    }
+
+   .refresh-btn:active {
+      background-color: #3d8b40;
+    }
+
+   .groups-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+   .group {
+      flex: 1;
+      min-width: 300px;
+      border: 1px solid #ccc;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      background-color: white;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-top: 0;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li {
+      padding: 8px 10px;
+      border-bottom: 1px solid #eee;
+      transition: background-color 0.2s;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeIn 0.3s forwards;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    li:last-child {
+      border-bottom: none;
+    }
+
+    li:hover {
+      background-color: #f5f5f5;
+    }
+
+    /* 为每个列表项设置不同的动画延迟，创造依次出现的效果 */
+    li:nth-child(1) { animation-delay: 0.05s; }
+    li:nth-child(2) { animation-delay: 0.1s; }
+    li:nth-child(3) { animation-delay: 0.15s; }
+    li:nth-child(4) { animation-delay: 0.2s; }
+    li:nth-child(5) { animation-delay: 0.25s; }
+    li:nth-child(6) { animation-delay: 0.3s; }
+    li:nth-child(7) { animation-delay: 0.35s; }
+    li:nth-child(8) { animation-delay: 0.4s; }
+    li:nth-child(9) { animation-delay: 0.45s; }
+    li:nth-child(10) { animation-delay: 0.5s; }
+    li:nth-child(11) { animation-delay: 0.55s; }
+    li:nth-child(12) { animation-delay: 0.6s; }
+    li:nth-child(13) { animation-delay: 0.65s; }
+    li:nth-child(14) { animation-delay: 0.7s; }
+    li:nth-child(15) { animation-delay: 0.75s; }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <h1>随机抽取的英雄</h1>
+    <p class="author">@author: 龙舌兰姑娘#60556</p>
+    <button class="refresh-btn" id="refreshBtn">重新抽取</button>
+  </div>
+  
+  <div class="groups-container">
+    <div class="group">
+      <h2>组1</h2>
+      <ul id="group1"></ul>
+    </div>
+    <div class="group">
+      <h2>组2</h2>
+      <ul id="group2"></ul>
+    </div>
+  </div>
+
+  <script>
+    // 英雄列表
+    const heroes = [
+      "黑暗之女 安妮", "狂战士 奥拉夫", "正义巨像 加里奥", "卡牌大师 崔斯特", "德邦总管 赵信", "无畏战车 厄加特",
+      "诡术妖姬 乐芙兰", "猩红收割者 弗拉基米尔", "远古恐惧 费德提克", "正义天使 凯尔", "无极剑圣 易", "牛头酋长 阿利斯塔",
+      "符文法师 瑞兹", "亡灵战神 赛恩", "战争女神 希维尔", "众星之子 索拉卡", "迅捷斥候 提莫", "麦林炮手 崔丝塔娜",
+      "祖安怒兽 沃里克", "雪原双子 努努和威朗普", "赏金猎人 厄运小姐", "寒冰射手 艾希", "蛮族之王 泰达米尔", "武器大师 贾克斯",
+      "堕落天使 莫甘娜", "时光守护者 基兰", "炼金术士 辛吉德", "痛苦之拥 伊芙琳", "瘟疫之源 图奇", "死亡颂唱者 卡尔萨斯",
+      "虚空恐惧 科加斯", "殇之木乃伊 阿木木", "披甲龙龟 拉莫斯", "冰晶凤凰 艾尼维亚", "恶魔小丑 萨科", "祖安狂人 蒙多医生",
+      "琴瑟仙女 娑娜", "虚空行者 卡萨丁", "刀锋舞者 艾瑞莉娅", "风暴之怒 迦娜", "海洋之灾 普朗克", "英勇投弹手 库奇", "天启者 卡尔玛",
+      "瓦洛兰之盾 塔里克", "邪恶小法师 维迦", "巨魔之王 特朗德尔", "诺克萨斯统领 斯维因", "皮城女警 凯特琳", "蒸汽机器人 布里茨",
+      "熔岩巨兽 墨菲特", "不祥之刃 卡特琳娜", "永恒梦魇 魔腾", "扭曲树精 茂凯", "荒漠屠夫 雷克顿", "德玛西亚皇子 嘉文四世",
+      "蜘蛛女皇 伊莉丝", "发条魔灵 奥莉安娜", "齐天大圣 孙悟空", "复仇焰魂 布兰德", "盲僧 李青", "暗夜猎手 薇恩", "机械公敌 兰博",
+      "魔蛇之拥 卡西奥佩娅", "上古领主 斯卡纳", "大发明家 黑默丁格", "沙漠死神 内瑟斯", "狂野女猎手 奈德丽", "兽灵行者 乌迪尔",
+      "圣锤之毅 波比", "酒桶 古拉加斯", "不屈之枪 潘森", "探险家 伊泽瑞尔", "铁铠冥魂 莫德凯撒", "牧魂人 约里克", "离群之刺 阿卡丽",
+      "狂暴之心 凯南", "德玛西亚之力 盖伦", "曙光女神 蕾欧娜", "虚空先知 玛尔扎哈", "刀锋之影 泰隆", "放逐之刃 锐雯", "深渊巨口 克格莫",
+      "暮光之眼 慎", "光辉女郎 拉克丝", "远古巫灵 泽拉斯", "龙血武姬 希瓦娜", "九尾妖狐 阿狸", "法外狂徒 格雷福斯", "潮汐海灵 菲兹",
+      "不灭狂雷 沃利贝尔", "傲之追猎者 雷恩加尔", "惩戒之箭 韦鲁斯", "深海泰坦 诺提勒斯", "机械先驱 维克托", "北地之怒 瑟庄妮",
+      "无双剑姬 菲奥娜", "爆破鬼才 吉格斯", "仙灵女巫 璐璐", "荣耀行刑官 德莱文", "战争之影 赫卡里姆", "虚空掠夺者 卡兹克",
+      "诺克萨斯之手 德莱厄斯", "未来守护者 杰斯", "冰霜女巫 丽桑卓", "皎月女神 黛安娜", "德玛西亚之翼 奎因", "暗黑元首 辛德拉",
+      "铸星龙王 奥瑞利安索尔", "影流之镰 凯隐", "暮光星灵 佐伊", "荆棘之兴 婕拉", "虚空之女 卡莎", "星籁歌姬 萨勒芬妮",
+      "迷失之牙 纳尔", "生化魔人 扎克", "疾风剑豪 亚索", "虚空之眼 维克兹", "岩雀 塔莉垭", "青钢影 卡蜜尔", "影哨 阿克尚",
+      "虚空女皇 卑尔维斯", "弗雷尔卓德之心 布隆", "戏命师 烬", "永猎双子 千珏", "祖安花火 泽丽", "暴走萝莉 金克丝", "河流之王 塔姆",
+      "狂厄蔷薇 贝蕾亚", "破败之王 佛耶戈", "涤魂圣枪 赛娜", "圣枪游侠 卢锡安", "影流之主 劫", "暴怒骑士 克烈", "时间刺客 艾克",
+      "元素女皇 奇亚娜", "皮城执法官 蔚", "暗裔剑魔 亚托克斯", "唤潮鲛姬 娜美", "沙漠皇帝 阿兹尔", "魔法猫咪 悠米", "沙漠玫瑰 莎弥拉",
+      "魂锁典狱长 锤石", "海兽祭司 俄洛伊", "虚空遁地兽 雷克塞", "翠神 艾翁", "复仇之矛 卡莉丝塔", "星界游神 巴德", "幻翎 洛",
+      "逆羽 霞", "山隐之焰 奥恩", "解脱者 塞拉斯", "万花通灵 妮蔻", "残月之肃 厄斐琉斯", "镕铁少女 芮尔", "血港鬼影 派克",
+      "愁云使者 薇古丝", "封魔剑魂 永恩", "腕豪 瑟提", "含羞蓓蕾 莉莉娅", "灵罗娃娃 格温", "炼金男爵 烈娜塔", "双界灵兔 阿萝拉",
+      "不羁之悦 尼菈", "纳祖芒荣耀 奎桑提", "炽炎雏龙 斯莫德", "明烛 米利欧", "异画师 彗", "百裂冥犬 纳亚菲利", "铁血狼母 安蓓萨", "流光镜影 梅尔", "不破之誓 芸阿娜"
+    ];
+
+    // 获取DOM元素
+    const group1List = document.getElementById('group1');
+    const group2List = document.getElementById('group2');
+    const refreshBtn = document.getElementById('refreshBtn');
+
+    // 抽取英雄的函数
+    function drawHeroes() {
+      // 清空现有列表
+      group1List.innerHTML = '';
+      group2List.innerHTML = '';
+      
+      // 用于存储已抽取的英雄索引
+      const selectedIndices = [];
+      
+      // 抽取组1英雄
+      for (let i = 0; i < 15; i++) {
+        let randomIndex;
+        do {
+          randomIndex = Math.floor(Math.random() * heroes.length);
+        } while (selectedIndices.includes(randomIndex));
+        selectedIndices.push(randomIndex);
+        const hero = heroes[randomIndex];
+        const listItem = document.createElement('li');
+        listItem.textContent = hero;
+        group1List.appendChild(listItem);
+      }
+      
+      // 抽取组2英雄
+      for (let i = 0; i < 15; i++) {
+        let randomIndex;
+        do {
+          randomIndex = Math.floor(Math.random() * heroes.length);
+        } while (selectedIndices.includes(randomIndex));
+        selectedIndices.push(randomIndex);
+        const hero = heroes[randomIndex];
+        const listItem = document.createElement('li');
+        listItem.textContent = hero;
+        group2List.appendChild(listItem);
+      }
+    }
+
+    // 初始抽取
+    drawHeroes();
+
+    // 绑定刷新按钮事件
+    refreshBtn.addEventListener('click', function() {
+      // 按钮点击效果
+      this.textContent = "抽取中...";
+      this.disabled = true;
+      
+      // 短暂延迟后重新抽取，增强用户体验
+      setTimeout(() => {
+        drawHeroes();
+        this.textContent = "重新抽取";
+        this.disabled = false;
+      }, 300);
+    });
+  </script>
+</body>
+
+</html>
+    
