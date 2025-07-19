@@ -10,20 +10,41 @@
       font-family: Arial, sans-serif;
       max-width: 1200px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 10px;
       background-color: #f9f9f9;
+    }
+    .text-container {
+      overflow: hidden;
+      white-space: nowrap;
+      width: 1000px;
+      display:flex;
+      color: red;
+      font-size: 30px;
+
+    }
+    .scrolling-text {
+      display: inline-block;
+      animation: scrollText 15s linear infinite;
+    }
+    @keyframes scrollText {
+      from {
+        transform: translateX(100%);
+      }
+      to {
+        transform: translateX(-100%);
+      }
     }
 
    .header {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 10px;
     }
 
    .author {
       color: #666;
       font-style: italic;
-      margin-top: 10px;
-      margin-bottom: 20px;
+      margin-top: 5px;
+      margin-bottom: 5px;
     }
 
    .refresh-btn {
@@ -52,10 +73,10 @@
     }
 
    .group {
-      flex: 1;
-      min-width: 300px;
+      flex: 40%;
+      min-width: 100px;
       border: 1px solid #ccc;
-      padding: 15px;
+      padding: 5px;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       background-color: white;
@@ -64,7 +85,8 @@
     h2 {
       text-align: center;
       color: #333;
-      margin-top: 0;
+      margin-top: 5px;
+      margin-bottom: 0;
     }
 
     ul {
@@ -73,7 +95,7 @@
     }
 
     li {
-      padding: 8px 10px;
+      padding: 5px 5px;
       border-bottom: 1px solid #eee;
       transition: background-color 0.2s;
       opacity: 0;
@@ -112,13 +134,21 @@
     li:nth-child(13) { animation-delay: 0.65s; }
     li:nth-child(14) { animation-delay: 0.7s; }
     li:nth-child(15) { animation-delay: 0.75s; }
+
+
+
   </style>
 </head>
 
 <body>
+  <div class="text-container">
+    <div class="scrolling-text">乱斗杯S4火热刺激进行中！祝比赛圆满成功，愿各位选手都能够取得好成绩！</div>
+  </div>
   <div class="header">
     <h1>随机抽取的英雄</h1>
     <p class="author">@author: 龙舌兰姑娘#60556</p>
+<!--    <p class="author">@update:10</p>-->
+    <p class="author">@version:1.1</p>
     <button class="refresh-btn" id="refreshBtn">重新抽取</button>
   </div>
   
@@ -136,33 +166,179 @@
   <script>
     // 英雄列表
     const heroes = [
-      "黑暗之女 安妮", "狂战士 奥拉夫", "正义巨像 加里奥", "卡牌大师 崔斯特", "德邦总管 赵信", "无畏战车 厄加特",
-      "诡术妖姬 乐芙兰", "猩红收割者 弗拉基米尔", "远古恐惧 费德提克", "正义天使 凯尔", "无极剑圣 易", "牛头酋长 阿利斯塔",
-      "符文法师 瑞兹", "亡灵战神 赛恩", "战争女神 希维尔", "众星之子 索拉卡", "迅捷斥候 提莫", "麦林炮手 崔丝塔娜",
-      "祖安怒兽 沃里克", "雪原双子 努努和威朗普", "赏金猎人 厄运小姐", "寒冰射手 艾希", "蛮族之王 泰达米尔", "武器大师 贾克斯",
-      "堕落天使 莫甘娜", "时光守护者 基兰", "炼金术士 辛吉德", "痛苦之拥 伊芙琳", "瘟疫之源 图奇", "死亡颂唱者 卡尔萨斯",
-      "虚空恐惧 科加斯", "殇之木乃伊 阿木木", "披甲龙龟 拉莫斯", "冰晶凤凰 艾尼维亚", "恶魔小丑 萨科", "祖安狂人 蒙多医生",
-      "琴瑟仙女 娑娜", "虚空行者 卡萨丁", "刀锋舞者 艾瑞莉娅", "风暴之怒 迦娜", "海洋之灾 普朗克", "英勇投弹手 库奇", "天启者 卡尔玛",
-      "瓦洛兰之盾 塔里克", "邪恶小法师 维迦", "巨魔之王 特朗德尔", "诺克萨斯统领 斯维因", "皮城女警 凯特琳", "蒸汽机器人 布里茨",
-      "熔岩巨兽 墨菲特", "不祥之刃 卡特琳娜", "永恒梦魇 魔腾", "扭曲树精 茂凯", "荒漠屠夫 雷克顿", "德玛西亚皇子 嘉文四世",
-      "蜘蛛女皇 伊莉丝", "发条魔灵 奥莉安娜", "齐天大圣 孙悟空", "复仇焰魂 布兰德", "盲僧 李青", "暗夜猎手 薇恩", "机械公敌 兰博",
-      "魔蛇之拥 卡西奥佩娅", "上古领主 斯卡纳", "大发明家 黑默丁格", "沙漠死神 内瑟斯", "狂野女猎手 奈德丽", "兽灵行者 乌迪尔",
-      "圣锤之毅 波比", "酒桶 古拉加斯", "不屈之枪 潘森", "探险家 伊泽瑞尔", "铁铠冥魂 莫德凯撒", "牧魂人 约里克", "离群之刺 阿卡丽",
-      "狂暴之心 凯南", "德玛西亚之力 盖伦", "曙光女神 蕾欧娜", "虚空先知 玛尔扎哈", "刀锋之影 泰隆", "放逐之刃 锐雯", "深渊巨口 克格莫",
-      "暮光之眼 慎", "光辉女郎 拉克丝", "远古巫灵 泽拉斯", "龙血武姬 希瓦娜", "九尾妖狐 阿狸", "法外狂徒 格雷福斯", "潮汐海灵 菲兹",
-      "不灭狂雷 沃利贝尔", "傲之追猎者 雷恩加尔", "惩戒之箭 韦鲁斯", "深海泰坦 诺提勒斯", "机械先驱 维克托", "北地之怒 瑟庄妮",
-      "无双剑姬 菲奥娜", "爆破鬼才 吉格斯", "仙灵女巫 璐璐", "荣耀行刑官 德莱文", "战争之影 赫卡里姆", "虚空掠夺者 卡兹克",
-      "诺克萨斯之手 德莱厄斯", "未来守护者 杰斯", "冰霜女巫 丽桑卓", "皎月女神 黛安娜", "德玛西亚之翼 奎因", "暗黑元首 辛德拉",
-      "铸星龙王 奥瑞利安索尔", "影流之镰 凯隐", "暮光星灵 佐伊", "荆棘之兴 婕拉", "虚空之女 卡莎", "星籁歌姬 萨勒芬妮",
-      "迷失之牙 纳尔", "生化魔人 扎克", "疾风剑豪 亚索", "虚空之眼 维克兹", "岩雀 塔莉垭", "青钢影 卡蜜尔", "影哨 阿克尚",
-      "虚空女皇 卑尔维斯", "弗雷尔卓德之心 布隆", "戏命师 烬", "永猎双子 千珏", "祖安花火 泽丽", "暴走萝莉 金克丝", "河流之王 塔姆",
-      "狂厄蔷薇 贝蕾亚", "破败之王 佛耶戈", "涤魂圣枪 赛娜", "圣枪游侠 卢锡安", "影流之主 劫", "暴怒骑士 克烈", "时间刺客 艾克",
-      "元素女皇 奇亚娜", "皮城执法官 蔚", "暗裔剑魔 亚托克斯", "唤潮鲛姬 娜美", "沙漠皇帝 阿兹尔", "魔法猫咪 悠米", "沙漠玫瑰 莎弥拉",
-      "魂锁典狱长 锤石", "海兽祭司 俄洛伊", "虚空遁地兽 雷克塞", "翠神 艾翁", "复仇之矛 卡莉丝塔", "星界游神 巴德", "幻翎 洛",
-      "逆羽 霞", "山隐之焰 奥恩", "解脱者 塞拉斯", "万花通灵 妮蔻", "残月之肃 厄斐琉斯", "镕铁少女 芮尔", "血港鬼影 派克",
-      "愁云使者 薇古丝", "封魔剑魂 永恩", "腕豪 瑟提", "含羞蓓蕾 莉莉娅", "灵罗娃娃 格温", "炼金男爵 烈娜塔", "双界灵兔 阿萝拉",
-      "不羁之悦 尼菈", "纳祖芒荣耀 奎桑提", "炽炎雏龙 斯莫德", "明烛 米利欧", "异画师 彗", "百裂冥犬 纳亚菲利", "铁血狼母 安蓓萨", "流光镜影 梅尔", "不破之誓 芸阿娜"
-    ];
+            ["黑暗之女 安妮","Annie"],
+            ["狂战士 奥拉夫","Olaf"],
+            ["正义巨像 加里奥","Galio"],
+            ["卡牌大师 崔斯特","TwistedFate"],
+            ["德邦总管 赵信","XinZhao"],
+            ["无畏战车 厄加特","Urgot"],
+            ["诡术妖姬 乐芙兰","Leblanc"],
+            ["猩红收割者 弗拉基米尔","Vladimir"],
+            ["远古恐惧 费德提克","Fiddlesticks"],
+            ["正义天使 凯尔","Kayle"],
+            ["无极剑圣 易","MasterYi"],
+            ["牛头酋长 阿利斯塔","Alistar"],
+            ["符文法师 瑞兹","Ryze"],
+            ["亡灵战神 赛恩","Sion"],
+            ["战争女神 希维尔","Sivir"],
+            ["众星之子 索拉卡","Soraka"],
+            ["迅捷斥候 提莫","Teemo"],
+            ["麦林炮手 崔丝塔娜","Tristana"],
+            ["祖安怒兽 沃里克","Warwick"],
+            ["雪原双子 努努和威朗普","Nunu"],
+            ["赏金猎人 厄运小姐","MissFortune"],
+            ["寒冰射手 艾希","Ashe"],
+            ["蛮族之王 泰达米尔","Tryndamere"],
+            ["武器大师 贾克斯","Jax"],
+            ["堕落天使 莫甘娜","Morgana"],
+            ["时光守护者 基兰","Zilean"],
+            ["炼金术士 辛吉德","Singed"],
+            ["痛苦之拥 伊芙琳","Evelynn"],
+            ["瘟疫之源 图奇","Twitch"],
+            ["死亡颂唱者 卡尔萨斯","Karthus"],
+            ["虚空恐惧 科加斯","Chogath"],
+            ["殇之木乃伊 阿木木","Amumu"],
+            ["披甲龙龟 拉莫斯","Rammus"],
+            ["冰晶凤凰 艾尼维亚","Anivia"],
+            ["恶魔小丑 萨科","Shaco"],
+            ["祖安狂人 蒙多医生","DrMundo"],
+            ["琴瑟仙女 娑娜","Sona"],
+            ["虚空行者 卡萨丁","Kassadin"],
+            ["刀锋舞者 艾瑞莉娅","Irelia"],
+            ["风暴之怒 迦娜","Janna"],
+            ["海洋之灾 普朗克","Gangplank"],
+            ["英勇投弹手 库奇","Corki"],
+            ["天启者 卡尔玛","Karma"],
+            ["瓦洛兰之盾 塔里克","Taric"],
+            ["邪恶小法师 维迦","Veigar"],
+            ["巨魔之王 特朗德尔","Trundle"],
+            ["诺克萨斯统领 斯维因","Swain"],
+            ["皮城女警 凯特琳","Caitlyn"],
+            ["蒸汽机器人 布里茨","Blitzcrank"],
+            ["熔岩巨兽 墨菲特","Malphite"],
+            ["不祥之刃 卡特琳娜","Katarina"],
+            ["永恒梦魇 魔腾","Nocturne"],
+            ["扭曲树精 茂凯","Maokai"],
+            ["荒漠屠夫 雷克顿","Renekton"],
+            ["德玛西亚皇子 嘉文四世","JarvanIV"],
+            ["蜘蛛女皇 伊莉丝","Elise"],
+            ["发条魔灵 奥莉安娜","Orianna"],
+            ["齐天大圣 孙悟空","MonkeyKing"],
+            ["复仇焰魂 布兰德","Brand"],
+            ["盲僧 李青","LeeSin"],
+            ["暗夜猎手 薇恩","Vayne"],
+            ["机械公敌 兰博","Rumble"],
+            ["魔蛇之拥 卡西奥佩娅","Cassiopeia"],
+            ["上古领主 斯卡纳","Skarner"],
+            ["大发明家 黑默丁格","Heimerdinger"],
+            ["沙漠死神 内瑟斯","Nasus"],
+            ["狂野女猎手 奈德丽","Nidalee"],
+            ["兽灵行者 乌迪尔","Udyr"],
+            ["圣锤之毅 波比","Poppy"],
+            ["酒桶 古拉加斯","Gragas"],
+            ["不屈之枪 潘森","Pantheon"],
+            ["探险家 伊泽瑞尔","Ezreal"],
+            ["铁铠冥魂 莫德凯撒","Mordekaiser"],
+            ["牧魂人 约里克","Yorick"],
+            ["离群之刺 阿卡丽","Akali"],
+            ["狂暴之心 凯南","Kennen"],
+            ["德玛西亚之力 盖伦","Garen"],
+            ["曙光女神 蕾欧娜","Leona"],
+            ["虚空先知 玛尔扎哈","Malzahar"],
+            ["刀锋之影 泰隆","Talon"],
+            ["放逐之刃 锐雯","Riven"],
+            ["深渊巨口 克格莫","KogMaw"],
+            ["暮光之眼 慎","Shen"],
+            ["光辉女郎 拉克丝","Lux"],
+            ["远古巫灵 泽拉斯","Xerath"],
+            ["龙血武姬 希瓦娜","Shyvana"],
+            ["九尾妖狐 阿狸","Ahri"],
+            ["法外狂徒 格雷福斯","Graves"],
+            ["潮汐海灵 菲兹","Fizz"],
+            ["不灭狂雷 沃利贝尔","Volibear"],
+            ["傲之追猎者 雷恩加尔","Rengar"],
+            ["惩戒之箭 韦鲁斯","Varus"],
+            ["深海泰坦 诺提勒斯","Nautilus"],
+            ["机械先驱 维克托","Viktor"],
+            ["北地之怒 瑟庄妮","Sejuani"],
+            ["无双剑姬 菲奥娜","Fiora"],
+            ["爆破鬼才 吉格斯","Ziggs"],
+            ["仙灵女巫 璐璐","Lulu"],
+            ["荣耀行刑官 德莱文","Draven"],
+            ["战争之影 赫卡里姆","Hecarim"],
+            ["虚空掠夺者 卡兹克","Khazix"],
+            ["诺克萨斯之手 德莱厄斯","Darius"],
+            ["未来守护者 杰斯","Jayce"],
+            ["冰霜女巫 丽桑卓","Lissandra"],
+            ["皎月女神 黛安娜","Diana"],
+            ["德玛西亚之翼 奎因","Quinn"],
+            ["暗黑元首 辛德拉","Syndra"],
+            ["铸星龙王 奥瑞利安索尔","AurelionSol"],
+            ["影流之镰 凯隐","Kayn"],
+            ["暮光星灵 佐伊","Zoe"],
+            ["荆棘之兴 婕拉","Zyra"],
+            ["虚空之女 卡莎","Kaisa"],
+            ["星籁歌姬 萨勒芬妮","Seraphine"],
+            ["迷失之牙 纳尔","Gnar"],
+            ["生化魔人 扎克","Zac"],
+            ["疾风剑豪 亚索","Yasuo"],
+            ["虚空之眼 维克兹","Velkoz"],
+            ["岩雀 塔莉垭","Taliyah"],
+            ["青钢影 卡蜜尔","Camille"],
+            ["影哨 阿克尚","Akshan"],
+            ["虚空女皇 卑尔维斯","Belveth"],
+            ["弗雷尔卓德之心 布隆","Braum"],
+            ["戏命师 烬","Jhin"],
+            ["永猎双子 千珏","Kindred"],
+            ["祖安花火 泽丽","Zeri"],
+            ["暴走萝莉 金克丝","Jinx"],
+            ["河流之王 塔姆","TahmKench"],
+            ["狂厄蔷薇 贝蕾亚","Briar"],
+            ["破败之王 佛耶戈","Viego"],
+            ["涤魂圣枪 赛娜","Senna"],
+            ["圣枪游侠 卢锡安","Lucian"],
+            ["影流之主 劫","Zed"],
+            ["暴怒骑士 克烈","Kled"],
+            ["时间刺客 艾克","Ekko"],
+            ["元素女皇 奇亚娜","Qiyana"],
+            ["皮城执法官 蔚","Vi"],
+            ["暗裔剑魔 亚托克斯","Aatrox"],
+            ["唤潮鲛姬 娜美","Nami"],
+            ["沙漠皇帝 阿兹尔","Azir"],
+            ["魔法猫咪 悠米","Yuumi"],
+            ["沙漠玫瑰 莎弥拉","Samira"],
+            ["魂锁典狱长 锤石","Thresh"],
+            ["海兽祭司 俄洛伊","Illaoi"],
+            ["虚空遁地兽 雷克塞","RekSai"],
+            ["翠神 艾翁","Ivern"],
+            ["复仇之矛 卡莉丝塔","Kalista"],
+            ["星界游神 巴德","Bard"],
+            ["幻翎 洛","Rakan"],
+            ["逆羽 霞","Xayah"],
+            ["山隐之焰 奥恩","Ornn"],
+            ["解脱者 塞拉斯","Sylas"],
+            ["万花通灵 妮蔻","Neeko"],
+            ["残月之肃 厄斐琉斯","Aphelios"],
+            ["镕铁少女 芮尔","Rell"],
+            ["血港鬼影 派克","Pyke"],
+            ["愁云使者 薇古丝","Vex"],
+            ["封魔剑魂 永恩","Yone"],
+            ["腕豪 瑟提","Sett"],
+            ["含羞蓓蕾 莉莉娅","Lillia"],
+            ["灵罗娃娃 格温","Gwen"],
+            ["炼金男爵 烈娜塔","Renata"],
+            ["双界灵兔 阿萝拉","Aurora"],
+            ["不羁之悦 尼菈","Nilah"],
+            ["纳祖芒荣耀 奎桑提","KSante"],
+            ["炽炎雏龙 斯莫德","Smolder"],
+            ["明烛 米利欧","Milio"],
+            ["异画师 彗","Hwei"],
+            ["百裂冥犬 纳亚菲利","Naafiri"],
+            ["铁血狼母 安蓓萨","Ambessa"],
+            ["流光镜影 梅尔","Mel"],
+            ["不破之誓 芸阿娜","Yunara"],
+      ];
+
 
     // 获取DOM元素
     const group1List = document.getElementById('group1');
@@ -185,9 +361,10 @@
           randomIndex = Math.floor(Math.random() * heroes.length);
         } while (selectedIndices.includes(randomIndex));
         selectedIndices.push(randomIndex);
-        const hero = heroes[randomIndex];
+        const hero = heroes[randomIndex][0];
+        const herohead = heroes[randomIndex][1];
         const listItem = document.createElement('li');
-        listItem.textContent = hero;
+        listItem.innerHTML='<img style="float:left; width: 43px; height: 43px; border-radius:100%;" src=E:\\lol素材\\15.14.1\\img\\champion\\'+herohead+'.png><p style="font-size: 15px; margin: 10px">&nbsp;&nbsp;'+hero+'</p>';
         group1List.appendChild(listItem);
       }
       
@@ -198,9 +375,10 @@
           randomIndex = Math.floor(Math.random() * heroes.length);
         } while (selectedIndices.includes(randomIndex));
         selectedIndices.push(randomIndex);
-        const hero = heroes[randomIndex];
+        const hero = heroes[randomIndex][0];
+        const herohead = heroes[randomIndex][1];
         const listItem = document.createElement('li');
-        listItem.textContent = hero;
+        listItem.innerHTML='<img style="float:left; width: 43px; height: 43px; border-radius:100%;" src=E:\\lol素材\\15.14.1\\img\\champion\\'+herohead+'.png><p style="font-size: 15px; margin: 10px">&nbsp;&nbsp;'+hero+'</p>';
         group2List.appendChild(listItem);
       }
     }
@@ -221,6 +399,7 @@
         this.disabled = false;
       }, 300);
     });
+
   </script>
 </body>
 
